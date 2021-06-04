@@ -1,8 +1,8 @@
 from collections import namedtuple
 
 # Import state machine package
-import statepy.state
-from safe_cv import cv
+from . import statepy.state
+from .safe_cv import cv
 
 
 CANCEL = statepy.state.declareEventType('on_cancel')
@@ -204,7 +204,7 @@ class ImageRegistrationTask(object):
         if self.machine.currentState() is None:
             return None
         event = statepy.state.Event(etype)
-        for key, value in kwargs.iteritems():
+        for key, value in kwargs.items():
             setattr(event, key, value)
         self.machine.injectEvent(event)
         return event

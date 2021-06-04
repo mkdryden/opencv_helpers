@@ -1,1 +1,1 @@
-from cv2.cv import *
+from .cv2.cv import *

@@ -2,7 +2,7 @@ from time import sleep
 
 from path_helpers import path
 
-from recorder import Recorder, CVCaptureConfig
+from .recorder import Recorder, CVCaptureConfig
 
 
 def parse_args():
@@ -20,22 +20,22 @@ Copy n seconds from source video to destination.""",
     args.in_file = path(args.in_file[0])
     args.out_file = path(args.out_file[0])
     if args.in_file.abspath() == args.out_file.abspath():
-        raise ValueError, 'Input path and output path must be different.'
+        raise ValueError('Input path and output path must be different.')
     
     return args
 
 
 if __name__ == '__main__':
-    from safe_cv import cv
+    from .safe_cv import cv
 
     args = parse_args()
     cap_config = CVCaptureConfig(args.in_file, type_='file')
     r = Recorder(cap_config, args.out_file)
 
-    print 'start recording'
+    print('start recording')
     r.record()
 
     sleep(args.seconds)
 
-    print 'stop recording'
+    print('stop recording')
     r.stop()

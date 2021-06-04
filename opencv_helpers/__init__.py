@@ -53,8 +53,8 @@ def convert_color(im):
 
 def get_map_array(df_a, df_b):
     map_mat = cv.CreateMat(3, 3, cv.CV_32FC1)
-    cv.GetPerspectiveTransform(map(tuple, df_a.values),
-                               map(tuple, df_b.values), map_mat)
+    cv.GetPerspectiveTransform(list(map(tuple, df_a.values)),
+                               list(map(tuple, df_b.values)), map_mat)
     return np.fromstring(map_mat.tostring(), dtype='f32').reshape(3, 3)
 
 

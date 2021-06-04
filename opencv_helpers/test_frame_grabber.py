@@ -19,7 +19,7 @@ along with Microdrop.  If not, see <http://www.gnu.org/licenses/>.
 """
 from time import sleep
 from contextlib import closing
-from StringIO import StringIO
+from io import StringIO
 import signal
 import os
 
@@ -28,9 +28,9 @@ import gtk
 import gobject
 from path_helpers import path
 
-from safe_cv import cv
-from frame_grabber import FrameGrabber, CVCaptureConfig
-from camera_capture import CameraCapture
+from .safe_cv import cv
+from .frame_grabber import FrameGrabber, CVCaptureConfig
+from .camera_capture import CameraCapture
 
 
 def parse_args():

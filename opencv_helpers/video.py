@@ -5,8 +5,8 @@ import tempfile
 
 from path_helpers import path
 
-from safe_cv import cv
-from silence import Silence
+from .safe_cv import cv
+from .silence import Silence
 
 
 class CVCaptureProperties(object):
@@ -15,12 +15,12 @@ class CVCaptureProperties(object):
     def __init__(self, cap):
         self.cap = cap
         self.props = self._get_props()
-        for k, v in self.captureprop_name2code.iteritems():
+        for k, v in self.captureprop_name2code.items():
             setattr(self, k, self.props[k])
 
     def _get_props(self):
         with Silence():
-            values = dict([(k, cv.GetCaptureProperty(self.cap, v)) for k, v in self.captureprop_name2code.iteritems()])
+            values = dict([(k, cv.GetCaptureProperty(self.cap, v)) for k, v in self.captureprop_name2code.items()])
         return values
 
     @property
@@ -71,7 +71,7 @@ def copy_video(cap, output_path, frame_count=None, offset=0):
         frame_count = props.frame_count
     frame_count = min(props.frame_count, frame_count)
     skip_frames = min(offset, frame_count)
-    print 'frame_count, skip_frames:', frame_count, skip_frames
+    print('frame_count, skip_frames:', frame_count, skip_frames)
 
     writer = cv.CreateVideoWriter(output_path, cv.CV_FOURCC(*props.fourcc),
                                     props.fps, (props.width, props.height), True)

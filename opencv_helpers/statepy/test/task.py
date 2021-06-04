@@ -137,23 +137,23 @@ class TestTask(unittest.TestCase):
         # Now inject events to move us from the start to the end
         self._injectEvent(EVENT_A)
         cstate = self.machine.currentState()
-        self.assertEquals(self.TaskBcls, type(cstate))
+        self.assertEqual(self.TaskBcls, type(cstate))
         
         self._injectEvent(EVENT_D)
         cstate = self.machine.currentState()
-        self.assertEquals(self.TaskCcls, type(cstate))
+        self.assertEqual(self.TaskCcls, type(cstate))
         
         self._injectEvent(EVENT_E)
-        self.assert_(self.machine.complete)
+        self.assertTrue(self.machine.complete)
     
         # Now do the failure tasks
         self.machine.start(self.TaskBcls)
         self._injectEvent(EVENT_B_FAIL)
-        self.assertEquals(self.BRecoverycls, type(self.machine.currentState()))
+        self.assertEqual(self.BRecoverycls, type(self.machine.currentState()))
         
         self.machine.start(self.TaskCcls)
         self._injectEvent(EVENT_C_FAIL)
-        self.assertEquals(self.CRecoverycls, type(self.machine.currentState()))
+        self.assertEqual(self.CRecoverycls, type(self.machine.currentState()))
         
 #    def testDefaultTimeout(self):
 #        """

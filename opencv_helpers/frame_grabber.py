@@ -16,14 +16,14 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Microdrop.  If not, see <http://www.gnu.org/licenses/>.
 """
-from __future__ import division
+
 import sys
 from time import sleep
-import Queue
+import queue
 import multiprocessing
 from collections import namedtuple
 from contextlib import closing
-from StringIO import StringIO
+from io import StringIO
 from datetime import datetime, timedelta
 import os
 import tempfile
@@ -33,7 +33,7 @@ import gobject
 from path_helpers import path, pickle
 import numpy as np
 
-from video import cv
+from .video import cv
 
 
 class CVCaptureConfig(object):
@@ -47,7 +47,7 @@ class CVCaptureConfig(object):
         elif type_ not in self.types:
             type_ = type_.strip()
             if not type_ in self.types._fields:
-                raise ValueError, 'Invalid type: %s' % type_
+                raise ValueError('Invalid type: %s' % type_)
             else:
                 type_ = getattr(self.types, type_)
         self.type_ = type_
@@ -58,10 +58,10 @@ class CVCaptureConfig(object):
         elif self.type_ == self.types.file:
             source_path = path(self.source).abspath()
             if not source_path.exists():
-                raise IOError, 'Capture source path is not accessible: %s' % source_path.abspath()
+                raise IOError('Capture source path is not accessible: %s' % source_path.abspath())
             cap = cv.CaptureFromFile(self.source)
         else:
-            raise ValueError, 'Unsupported capture type: %s' % self.type_
+            raise ValueError('Unsupported capture type: %s' % self.type_)
         return cap
 
     def test_capture(self):

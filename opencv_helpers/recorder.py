@@ -1,10 +1,10 @@
 import sys
 from time import sleep
-import Queue
+import queue
 import multiprocessing
 from collections import namedtuple
 from contextlib import closing
-from StringIO import StringIO
+from io import StringIO
 from datetime import datetime, timedelta
 import os
 import tempfile
@@ -13,9 +13,9 @@ import logging
 from path_helpers import path, pickle
 import numpy as np
 
-from video import cv, CVCaptureProperties
-from frame_rate import FrameRateInfo
-from silence import Silence
+from .video import cv, CVCaptureProperties
+from .frame_rate import FrameRateInfo
+from .silence import Silence
 
 
 class CVCaptureConfig(object):
@@ -29,7 +29,7 @@ class CVCaptureConfig(object):
         elif type_ not in self.types:
             type_ = type_.strip()
             if not type_ in self.types._fields:
-                raise ValueError, 'Invalid type: %s' % type_
+                raise ValueError('Invalid type: %s' % type_)
             else:
                 type_ = getattr(self.types, type_)
         self.type_ = type_
@@ -40,10 +40,10 @@ class CVCaptureConfig(object):
         elif self.type_ == self.types.file:
             source_path = path(self.source).abspath()
             if not source_path.exists():
-                raise IOError, 'Capture source path is not accessible: %s' % source_path.abspath()
+                raise IOError('Capture source path is not accessible: %s' % source_path.abspath())
             cap = cv.CaptureFromFile(self.source)
         else:
-            raise ValueError, 'Unsupported capture type: %s' % self.type_
+            raise ValueError('Unsupported capture type: %s' % self.type_)
         return cap
 
     def test_capture(self):
@@ -64,15 +64,15 @@ class RecorderLog(object):
     def print_summary(self):
         from pprint import pprint
 
-        print 'captured %d frames' % len(self.times)
-        print '  first frame: %s' % self.times[0]
-        print '  last frame:  %s' % self.times[-1]
-        print '  recording length: %s' % (self.times[-1] - self.times[0]).total_seconds()
+        print('captured %d frames' % len(self.times))
+        print('  first frame: %s' % self.times[0])
+        print('  last frame:  %s' % self.times[-1])
+        print('  recording length: %s' % (self.times[-1] - self.times[0]).total_seconds())
 
-        print '  Frame rate info:'
-        print '    mean: %s' % (1.0 / self.frame_lengths.mean())
-        print '    max:  %s' % (1.0 / self.frame_lengths.min())
-        print '    min:  %s' % (1.0 / self.frame_lengths.max())
+        print('  Frame rate info:')
+        print('    mean: %s' % (1.0 / self.frame_lengths.mean()))
+        print('    max:  %s' % (1.0 / self.frame_lengths.min()))
+        print('    min:  %s' % (1.0 / self.frame_lengths.max()))
 
         pprint(self.frame_lengths)
 

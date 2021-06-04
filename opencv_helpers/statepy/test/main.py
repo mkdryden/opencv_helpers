@@ -52,9 +52,9 @@ def importFromPath(path):
     
     try:
         return imp.load_module(name, f, pathname, decs)
-    except ImportError,e:
-        print 'Could import %s: '% path.replace(testDir, ''),
-        print '\t',e
+    except ImportError as e:
+        print('Could import %s: '% path.replace(testDir, ''), end=' ')
+        print('\t',e)
     
     return None
 
@@ -79,7 +79,7 @@ def main(argv = None):
             mod = importFromPath(path)
 
             if mod is not None:
-                print 'Gathering From: ',path.replace(testDir,'')
+                print('Gathering From: ',path.replace(testDir,''))
                 suite.addTest(testLoader.loadTestsFromModule(mod))
         
         # don't visit SVN directories    
@@ -87,7 +87,7 @@ def main(argv = None):
             dirs.remove('.svn')  
         
     # Run the tests
-    print '\nRunning Tests:'
+    print('\nRunning Tests:')
     result = unittest.TextTestRunner().run(suite)
 
     if not result.wasSuccessful():

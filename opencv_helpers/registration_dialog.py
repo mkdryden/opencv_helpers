@@ -1,11 +1,11 @@
-from __future__ import division
+
 import sys
 
 import gtk
 from path_helpers import path
 
-from safe_cv import cv
-from overlay_registration import ImageRegistrationTask, Point, OVERLAY_CLICK,\
+from .safe_cv import cv
+from .overlay_registration import ImageRegistrationTask, Point, OVERLAY_CLICK,\
         IMAGE_CLICK, WaitOverlayClick, WaitImageClick
 
 
@@ -95,7 +95,7 @@ class RegistrationDialog(object):
 
     def make_event(self, etype, **kwargs):
         event = state.Event(etype)
-        for key, value in kwargs.iteritems():
+        for key, value in kwargs.items():
             setattr(event, key, value)
         return event
 

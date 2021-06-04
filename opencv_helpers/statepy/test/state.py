@@ -29,7 +29,7 @@
 
 # STD Imports
 import unittest
-import StringIO
+import io
 import inspect
 import os.path
 
@@ -195,7 +195,7 @@ class TestFreeFunctions(unittest.TestCase):
         evtType = state.declareEventType("An Event")
 
         expectedResult = fileName + ":" + expectedLineNum + " " + "An_Event"
-        self.assertEquals(expectedResult, evtType)
+        self.assertEqual(expectedResult, evtType)
         
     
 # --------------------------------------------------------------------------- #
@@ -209,18 +209,18 @@ class TestStateMachine(unittest.TestCase):
 
     def _makeEvent(self, etype, **kwargs):
         event = state.Event(etype)
-        for key, value in kwargs.iteritems():
+        for key, value in kwargs.items():
             setattr(event, key, value)
         return event
 
     def testbasic(self):
         # Check to make sure we get the default
         cstate = self.machine.currentState()
-        self.assertEquals(Start, type(cstate))
+        self.assertEqual(Start, type(cstate))
 
     def testStart(self):
         cstate = self.machine.currentState()
-        self.assert_(cstate.entered)
+        self.assertTrue(cstate.entered)
         self.assertFalse(cstate.exited)
         
     def testInjectEvent(self):
@@ -230,19 +230,19 @@ class TestStateMachine(unittest.TestCase):
         cstate = self.machine.currentState()
 
         # Check to me sure we left the start state
-        self.assert_(startState.exited)
+        self.assertTrue(startState.exited)
 
         # Check to make sure we reached the proper state
-        self.assertEquals(Simple, type(cstate))
-        self.assert_(cstate)
+        self.assertEqual(Simple, type(cstate))
+        self.assertTrue(cstate)
 
         # Make sure the transition function was called
-        self.assertNotEquals(None, startState.event)
-        self.assertEquals(startState.event.value, 1)
+        self.assertNotEqual(None, startState.event)
+        self.assertEqual(startState.event.value, 1)
 
         # Now make sure we can inject events with the type directly
         self.machine.injectEvent(MockEventSource.ANOTHER_EVT)
-        self.assertEquals(Start, type(self.machine.currentState()))
+        self.assertEqual(Start, type(self.machine.currentState()))
 
     def testStop(self):
         # No States
@@ -259,38 +259,38 @@ class TestStateMachine(unittest.TestCase):
                           self._makeEvent("Start", value = 1))
         cstate = self.machine.currentState()
 
-        self.assertNotEquals(End, type(cstate))
-        self.assertNotEquals(startState, cstate)
+        self.assertNotEqual(End, type(cstate))
+        self.assertNotEqual(startState, cstate)
 
     def testSimple(self):
         self.machine.injectEvent(self._makeEvent("Change"))
         cstate = self.machine.currentState()
-        self.assertEquals(Simple, type(cstate))
+        self.assertEqual(Simple, type(cstate))
 
     def testLoop(self):
         self.machine.injectEvent(self._makeEvent("LoopBack"))
         cstate = self.machine.currentState()
 
         # Ensure we got into are looping state
-        self.assertEquals(LoopBack, type(cstate))
-        self.assert_(cstate.entered)
+        self.assertEqual(LoopBack, type(cstate))
+        self.assertTrue(cstate.entered)
 
         # Make  A Loopback
         self.machine.injectEvent(self._makeEvent("Update"))
         newstate = self.machine.currentState()
 
-        self.assertEquals(LoopBack, type(newstate))
+        self.assertEqual(LoopBack, type(newstate))
         self.assertFalse(newstate.exited)
-        self.assertEquals(1, newstate.transCount)
-        self.assertEquals(1, newstate.enterCount)
-        self.assertEquals(newstate, cstate)
+        self.assertEqual(1, newstate.transCount)
+        self.assertEqual(1, newstate.enterCount)
+        self.assertEqual(newstate, cstate)
 
         # Repated loopbacks
-        for i in xrange(1,5):
+        for i in range(1,5):
             self.machine.injectEvent(self._makeEvent("Update"))
-        self.assertEquals(5, cstate.transCount)
+        self.assertEqual(5, cstate.transCount)
         self.assertFalse(newstate.exited)
-        self.assertEquals(1, newstate.enterCount)
+        self.assertEqual(1, newstate.enterCount)
        
     def testComplete(self):
 #        enterRecv = Reciever()
@@ -301,7 +301,7 @@ class TestStateMachine(unittest.TestCase):
         # Ensure that completion is detected
         self.assertEqual(False, self.machine.complete)
         self.machine.injectEvent(self._makeEvent("Start"))
-        self.assert_(self.machine.complete)
+        self.assertTrue(self.machine.complete)
         
         # State machine is done, make sure there is no current state
         self.assertEqual(None, self.machine.currentState())
@@ -365,15 +365,15 @@ class TestStateMachine(unittest.TestCase):
         cstate = self.machine.currentState()
 
         # Check to me sure we left the start state
-        self.assert_(startState.exited)
+        self.assertTrue(startState.exited)
 
         # Check to make sure we reached the proper state
-        self.assertEquals(Simple, type(cstate))
-        self.assert_(cstate)
+        self.assertEqual(Simple, type(cstate))
+        self.assertTrue(cstate)
 
         # Make sure the transition function was called
-        self.assertNotEquals(None, startState.thingUpdatedEvent)
-        self.assertEquals(startState.thingUpdatedEvent.value, 4)
+        self.assertNotEqual(None, startState.thingUpdatedEvent)
+        self.assertEqual(startState.thingUpdatedEvent.value, 4)
 
     def testStatevars(self):
         vara = "A"
@@ -386,10 +386,10 @@ class TestStateMachine(unittest.TestCase):
         
         # Check for variables
         def testForVars():
-            self.assert_(hasattr(startState, 'a'))
-            self.assertEquals(vara, startState.a)
-            self.assert_(hasattr(startState, 'B'))
-            self.assertEquals(varB, startState.B)
+            self.assertTrue(hasattr(startState, 'a'))
+            self.assertEqual(vara, startState.a)
+            self.assertTrue(hasattr(startState, 'B'))
+            self.assertEqual(varB, startState.B)
         testForVars()
 
         # Now test with the start functionality
@@ -401,8 +401,8 @@ class TestStateMachine(unittest.TestCase):
         testForVars()
 
         # Make sure we got them updated
-        self.assert_(hasattr(startState, 'cc'))
-        self.assertEquals(varcc, startState.cc)
+        self.assertTrue(hasattr(startState, 'cc'))
+        self.assertEqual(varcc, startState.cc)
 
         # Now restart without those vars and make sure they don't exist
         machine.start(Start)
@@ -413,7 +413,7 @@ class TestStateMachine(unittest.TestCase):
 
             
     def testWriteGraph(self):
-        mockFile = StringIO.StringIO()
+        mockFile = io.StringIO()
         state = Start
         self.machine.writeStateGraph(mockFile,state, ordered = True)
         output = mockFile.getvalue()
@@ -439,7 +439,7 @@ class TestStateMachine(unittest.TestCase):
             "state_Start -> state_Simple [label=THING_UPDATED,style=solid]\n" + \
             "}"
 
-        self.assertEquals(expected,output)
+        self.assertEqual(expected,output)
     
     def testBasicBranching(self):
         # Test Branching
@@ -456,7 +456,7 @@ class TestStateMachine(unittest.TestCase):
         branchedMachine = self.machine.branches[BranchedState]
         branchStartState = branchedMachine.currentState()
         self.assertEqual(BranchedState, type(branchStartState))
-        self.assert_(branchStartState.entered)
+        self.assertTrue(branchStartState.entered)
         self.assertEqual(False, branchStartState.exited)
         
         # Make sure branched machine doesn't impair state changes events
@@ -467,7 +467,7 @@ class TestStateMachine(unittest.TestCase):
         # Make sure events reach the branched machine
         self.machine.injectEvent(self._makeEvent("InBranchEvent"),
                                  _sendToBranches = True)
-        self.assert_(branchStartState.exited)
+        self.assertTrue(branchStartState.exited)
         self.assertEqual(BranchedMiddle, type(branchedMachine.currentState()))
         
         # Make sure we are still in the proper main state machine state
@@ -489,7 +489,7 @@ class TestStateMachine(unittest.TestCase):
         
         # Ensure we actually branched
         self.assertEqual(1, len(self.machine.branches))
-        self.assert_(self.machine.branches.has_key(Simple))
+        self.assertTrue(Simple in self.machine.branches)
    
     def testBranchStop(self):
         self.machine.start(state.Branch(Simple))
@@ -499,7 +499,7 @@ class TestStateMachine(unittest.TestCase):
         
         # Ensure we actually stopped the branch
         self.assertEqual(0, len(self.machine.branches))
-        self.assert_(branchedState.exited)
+        self.assertTrue(branchedState.exited)
         
         # Now test stopping just one branch
         self.machine.start(state.Branch(Simple))
@@ -508,11 +508,11 @@ class TestStateMachine(unittest.TestCase):
         
         self.machine.stopBranch(Simple)
         self.assertEqual(1, len(self.machine.branches))
-        self.assertFalse(self.machine.branches.has_key(Simple))
+        self.assertFalse(Simple in self.machine.branches)
         
         self.machine.stopBranch(Start)
         self.assertEqual(0, len(self.machine.branches))
-        self.assertFalse(self.machine.branches.has_key(Start))
+        self.assertFalse(Start in self.machine.branches)
         
     def testDoubleTransitions(self):
         self.machine.start(First)
@@ -530,7 +530,7 @@ class TestStateMachine(unittest.TestCase):
         self.assertEqual(SecondParent, type(self.machine.currentState()))
         
         # Make sure I branched properly
-        self.assert_(self.machine.branches.has_key(First))
+        self.assertTrue(First in self.machine.branches)
         branch = self.machine.branches[First]
         
         cstate = branch.currentState()

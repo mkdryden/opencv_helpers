@@ -4,7 +4,7 @@ by Markus Gritsch <gritsch@iue.tuwien.ac.at>
 
 """
 
-import vidcap
+from . import vidcap
 from PIL import Image, ImageFont, ImageDraw
 import time, string
 
@@ -63,9 +63,9 @@ class Device:
         displayCapturePinProperties() instead.
 
         """
-        print 'WARNING: displayPropertyPage() is deprecated.'
-        print '         Use displayCaptureFilterProperties() and displayCapturePinProperties()'
-        print '         instead!'
+        print('WARNING: displayPropertyPage() is deprecated.')
+        print('         Use displayCaptureFilterProperties() and displayCapturePinProperties()')
+        print('         instead!')
         self.dev.displaypropertypage()
 
     def displayCaptureFilterProperties(self):
@@ -147,7 +147,7 @@ class Device:
                 elif 'b' in textpos:
                     y = height - th - 2
                 else:
-                    raise ValueError, "textpos must contain exactly one out of 't', 'b'"
+                    raise ValueError("textpos must contain exactly one out of 't', 'b'")
                 if 'l' in textpos:
                     x = 2
                 elif 'c' in textpos:
@@ -155,7 +155,7 @@ class Device:
                 elif 'r' in textpos:
                     x = (width - tw) - 2
                 else:
-                    raise ValueError, "textpos must contain exactly one out of 'l', 'c', 'r'"
+                    raise ValueError("textpos must contain exactly one out of 'l', 'c', 'r'")
                 draw = ImageDraw.Draw(im)
                 if timestamp == 2: # shadow
                     draw.text((x+1, y), text, font=self.font, fill=shadowcolor)

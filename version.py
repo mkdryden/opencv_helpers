@@ -68,7 +68,7 @@ def readGitVersion():
         data, _ = proc.communicate()
         if proc.returncode:
             return None
-        ver = data.splitlines()[0].strip()
+        ver = data.splitlines()[0].strip().decode('utf-8')
         proc = subprocess.Popen(('git', 'rev-parse', '--abbrev-ref', 'HEAD'),
                                 stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         branch, _ = proc.communicate()
@@ -131,5 +131,5 @@ def getVersion():
 
 
 if __name__ == '__main__':
-    print getVersion()
+    print(getVersion())
 

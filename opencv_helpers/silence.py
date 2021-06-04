@@ -1,7 +1,7 @@
 ## {{{ http://code.activestate.com/recipes/577564/ (r2)
 import os
 import sys
-from StringIO import StringIO
+from io import StringIO
 from tempfile import NamedTemporaryFile, mkstemp
 
 from path_helpers import path
@@ -86,7 +86,7 @@ class Silence:
         # save previous stdout/stderr
         self.saved_streams = saved_streams = sys.__stdout__, sys.__stderr__
         self.fds = fds = [s.fileno() for s in saved_streams]
-        self.saved_fds = map(os.dup, fds)
+        self.saved_fds = list(map(os.dup, fds))
         # flush any pending output
         for s in saved_streams: s.flush()
 
@@ -117,15 +117,17 @@ class Silence:
         self.null_streams = null_streams
         
         # overwrite file objects and low-level file descriptors
-        map(os.dup2, null_fds, fds)
+        for null_fd, fd in zip(null_fds, fds):
+            os.dup2(null_fd, fd)
 
     def __exit__(self, *args):
         #sys = self.sys
         # flush any pending output
         for s in self.saved_streams: s.flush()
         # restore original streams and file descriptors
-        map(os.dup2, self.saved_fds, self.fds)
-        map(os.close, self.saved_fds)
+        for saved_fd, fd in zip(self.saved_fds, self.fds):
+            os.dup2(saved_fd, fd)
+            os.close(saved_fd)
         sys.stdout, sys.stderr = self.saved_streams
         # clean up
         for s in self.null_streams: s.close()

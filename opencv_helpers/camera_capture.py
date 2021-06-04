@@ -3,9 +3,9 @@ from datetime import datetime, timedelta
 
 import numpy as np
 
-from video import CVCaptureProperties
-from recorder import CVCaptureConfig, cv, RecordFrameRateInfo
-from frame_rate import FrameRateInfo
+from .video import CVCaptureProperties
+from .recorder import CVCaptureConfig, cv, RecordFrameRateInfo
+from .frame_rate import FrameRateInfo
 
 
 class CaptureError(Exception):
@@ -45,7 +45,7 @@ class CameraCaptureBase(object):
     def init_capture(self):
         result = self._init_capture()
         if self.get_frame() is None:
-            raise CaptureError, 'could not initialize capture device.'
+            raise CaptureError('could not initialize capture device.')
         self.initialized = True
         return result
 
@@ -140,12 +140,12 @@ class CAMVideoCapture(CameraCaptureBase):
         super(CAMVideoCapture, self).__init__(auto_init=auto_init)
 
     def _init_capture(self):
-        from videocapture.VideoCapture import Device
+        from .videocapture.VideoCapture import Device
 
         try:
             self.device = Device()
-        except Exception, why:
-            raise CaptureError, 'could not initialize capture device'
+        except Exception as why:
+            raise CaptureError('could not initialize capture device')
         for i in range(100):
             self.device.getImage()
 

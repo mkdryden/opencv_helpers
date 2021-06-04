@@ -81,7 +81,7 @@ class State(object):
     methods of a state
     """
     def __init__(self, **statevars):
-        for name, statevar in statevars.iteritems():
+        for name, statevar in statevars.items():
             setattr(self, name, statevar)
 
         # TODO: check my own transition table to make sure none of the
@@ -222,7 +222,7 @@ class Machine(object):
         """
 
         # Remove the previous startStatevars from our list of variables
-        for key in self._startStatevars.iterkeys():
+        for key in self._startStatevars.keys():
             del self._statevars[key]
 
         if statevars is not None:
@@ -265,7 +265,7 @@ class Machine(object):
         self._currentState = None
         self._complete = False
         
-        for branch in self._branches.itervalues():
+        for branch in self._branches.values():
             branch.stop()
         self._branches = {}
         
@@ -347,7 +347,7 @@ class Machine(object):
         self._previousEvent = event
         
         if _sendToBranches:
-            for branch in self._branches.itervalues():
+            for branch in self._branches.values():
                 branch.injectEvent(event)
 
     @property
@@ -399,7 +399,7 @@ class Machine(object):
         self._currentState = None
 
     def _branchToState(self, nextState, branchingEvent = None):
-        if self._branches.has_key(nextState):
+        if nextState in self._branches:
             raise Exception("Already branched to this state")
         
         # Create new state machine
@@ -491,7 +491,7 @@ class Machine(object):
             if not currentState in traversedList:
                     traversedList.append(currentState)
         else:
-            for aiEvent,aiState in currentState.transitions().iteritems():
+            for aiEvent,aiState in currentState.transitions().items():
                 eventName = str(aiEvent).split(' ')[-1]
                 
                 # Style is determine whether or not we are branching

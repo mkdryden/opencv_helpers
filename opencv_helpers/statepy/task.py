@@ -128,7 +128,7 @@ class Task(state.State):
         state.State.__init__(self, **statevars)
 
         # Ensure that we have a task manager present
-        if not statevars.has_key(Task.TASK_MANAGER_NAME):
+        if Task.TASK_MANAGER_NAME not in statevars:
             msg = 'No TaskManager of name "%s" provided to Task State' % Task.TASK_MANAGER_NAME
             raise statepy.StatePyException(msg)
         
@@ -161,7 +161,7 @@ class Task(state.State):
         """
         baseTrans = self._transitions()
         newTrans = {}
-        for eventType, nextState in baseTrans.iteritems():
+        for eventType, nextState in baseTrans.items():
             # Catch the timeout event and replace with our class specific 
             # timeout event type
             #if eventType == TIMEOUT:
@@ -176,7 +176,7 @@ class Task(state.State):
                 # If that state is the special failure marker state, swap it 
                 # out for the real failure state
                 if self._failureState is None:
-                    raise "ERROR: transition to non existent failure state"
+                    raise RuntimeError("ERROR: transition to non existent failure state")
                 nextState = self._failureState
             
             # Store the event

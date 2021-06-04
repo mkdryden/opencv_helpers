@@ -16,7 +16,7 @@ if __name__ == '__main__':
     from sys import argv
 
     if not len(argv) == 2:
-        print 'usage: %s <RecorderLog input file>' % argv[0]
+        print('usage: %s <RecorderLog input file>' % argv[0])
         raise SystemExit
     in_file = path(argv[1])
     plot_frames(in_file)

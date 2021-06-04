@@ -1,21 +1,21 @@
 #!/usr/bin/env python
 from time import sleep
 from contextlib import closing
-from StringIO import StringIO
+from io import StringIO
 
 from path_helpers import path
 
-from silence import Silence
-from recorder import Recorder, CVCaptureConfig, RecordFrameRateInfo
-from camera_capture import CameraCapture
-from codec import CodecTest, get_supported_codecs
+from .silence import Silence
+from .recorder import Recorder, CVCaptureConfig, RecordFrameRateInfo
+from .camera_capture import CameraCapture
+from .codec import CodecTest, get_supported_codecs
 
 
 def print_codec_list(msg=None):
     if msg is None:
         msg = 'Please choose from:'
-    print '%s\n   ' % msg,
-    print '\n    '.join(sorted([c.fourcc for c in get_supported_codecs()]))
+    print('%s\n   ' % msg, end=' ')
+    print('\n    '.join(sorted([c.fourcc for c in get_supported_codecs()])))
 
 
 def parse_args():
@@ -35,7 +35,7 @@ Copy n seconds from webcam to destination.""",
 
     if args.list_codecs:
         parser.print_help()
-        print ''
+        print('')
         print_codec_list('Available codecs:')
         raise SystemExit
 
@@ -56,11 +56,11 @@ if __name__ == '__main__':
                 args.fourcc = c
                 break
         if args.fourcc is None:
-            print 'Default codecs not supported on this system.'
+            print('Default codecs not supported on this system.')
             print_codec_list()
             raise SystemExit
     elif not CodecTest.test_codec(args.fourcc):
-        print 'Unsupported codec: %s\n' % args.fourcc
+        print('Unsupported codec: %s\n' % args.fourcc)
         raise SystemExit
 
     cam_cap = CameraCapture()
@@ -75,5 +75,5 @@ if __name__ == '__main__':
 
     log.print_summary()
     log.save(args.out_file.parent.joinpath('%s.dat' % args.out_file.namebase))
-    print 'DONE'
+    print('DONE')
     del cam_cap

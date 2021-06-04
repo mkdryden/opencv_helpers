@@ -5,10 +5,10 @@ import gtk
 import numpy as np
 from path_helpers import path
 
-from safe_cv import cv
-from overlay_registration import ImageRegistrationTask, Point, OVERLAY_CLICK,\
+from .safe_cv import cv
+from .overlay_registration import ImageRegistrationTask, Point, OVERLAY_CLICK,\
                                 IMAGE_CLICK, CANCEL
-from registration_dialog import RegistrationDialog
+from .registration_dialog import RegistrationDialog
 
 
 class RegistrationDemoGUI(RegistrationDialog):
@@ -85,4 +85,4 @@ if __name__ == '__main__':
     gui = RegistrationDemoGUI(args.input_image, args.warped_image)
 
     import numpy as np
-    print np.asarray(gui.run())
+    print(np.asarray(gui.run()))

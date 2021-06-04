@@ -29,7 +29,7 @@
 # STD Imports
 import os
 import sys
-import StringIO
+import io
 import inspect
 from distutils import sysconfig
 
@@ -39,7 +39,7 @@ import ram_version_check
 
 # Capture stderr, to suppress unwanted warnings
 stderr = sys.stderr
-sys.stderr = StringIO.StringIO()
+sys.stderr = io.StringIO()
 
 try:
     # Project Imports
